@@ -1,10 +1,10 @@
 import connectDB from "@/lib/db";
 import categories from "@/models/categories";
 import transactions from "@/models/transactions";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function PUT(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { transactionId: string } }
 ) {
   try {
