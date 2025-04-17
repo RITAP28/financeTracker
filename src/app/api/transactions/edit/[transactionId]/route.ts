@@ -1,3 +1,4 @@
+import connectDB from "@/lib/db";
 import categories from "@/models/categories";
 import transactions from "@/models/transactions";
 import { NextResponse } from "next/server";
@@ -7,6 +8,7 @@ export async function PUT(
   context: { params: { transactionId: string } }
 ) {
   try {
+    await connectDB();
     const { amount, description, category, type, date } = await req.json();
     const transactionId = context.params.transactionId;
 
@@ -24,7 +26,11 @@ export async function PUT(
         $set: {
           amount: amount,
           description: description,
-          category: existingCategory._id,
+          category: {
+            id: existingCategory._id,
+            name: existingCategory.name,
+            color: existingCategory.color
+          },
           type: type,
           date: date,
         },

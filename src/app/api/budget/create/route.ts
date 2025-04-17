@@ -1,4 +1,4 @@
-import { connectDB } from "@/lib/db";
+import connectDB from "@/lib/db";
 import { IBudgetProps } from "@/lib/interface";
 import budget from "@/models/budget";
 import { NextResponse } from "next/server";
