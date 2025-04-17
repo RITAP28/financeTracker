@@ -4,14 +4,13 @@ import transactions from "@/models/transactions";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function PUT(
-  req: NextRequest,
-  { params }: { params: { transactionId: string } }
+  req: NextRequest
 ) {
   try {
     await connectDB();
     const { amount, description, category, type, date } = await req.json();
-    const transactionId = params.transactionId;
-
+    const transactionId = req.nextUrl.pathname.split("/").pop();
+    
     const existingCategory = await categories.findOne({ name: category });
     const existingTransaction = await transactions.findById(transactionId);
     if (!existingTransaction || !existingCategory)

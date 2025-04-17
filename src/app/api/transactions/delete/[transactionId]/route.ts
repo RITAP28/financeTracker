@@ -2,10 +2,10 @@ import connectDB from "@/lib/db";
 import transactions from "@/models/transactions";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function DELETE(req: NextRequest, { params }: { params: { transactionId: string } }) {
+export async function DELETE(req: NextRequest) {
     try {
         await connectDB();
-        const transactionId = params.transactionId;
+        const transactionId = req.nextUrl.pathname.split("/").pop();
 
         if (!transactionId) return NextResponse.json({ success: false, message: "Missing Transaction ID" }, { status: 400 });
         const existingTransaction = await transactions.findById(transactionId);
