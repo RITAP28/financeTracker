@@ -14,7 +14,8 @@ const TransactionSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       required: true
     },
-    name: String
+    name: String,
+    color: String
   },
   type: {
     type: String,

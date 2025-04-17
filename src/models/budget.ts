@@ -1,10 +1,17 @@
-import mongoose from 'mongoose';
+
+import mongoose from "mongoose";
 
 const BudgetSchema = new mongoose.Schema({
-    username: String,
-    month: String,
-    budgetAmount: Number,
-    createdAt: Date
+  category: {
+    id: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+    },
+    name: String,
+  },
+  month: String,
+  budgetAmount: Number,
+  createdAt: Date,
 });
 
-export default mongoose.models.Budget || mongoose.model('Budget', BudgetSchema);
+export default mongoose.models.Budget || mongoose.model("Budget", BudgetSchema);

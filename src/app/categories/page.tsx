@@ -81,7 +81,7 @@ const Categories = () => {
     handleFetchCategories();
   }, [handleFetchTransactions, handleFetchCategories]);
 
-  if (loading) {
+  if (loading || categoriesLoading) {
     return (
       <div className="flex items-center justify-center">
         <div className="text-center">
@@ -101,6 +101,16 @@ const Categories = () => {
         </div>
       </div>
     );
+  }
+
+  if (categoriesError) {
+    return (
+      <div className="w-full flex justify-center items-center">
+        <p className="text-red-500 text-sm font-semibold">
+          {categoriesError}
+        </p>
+      </div>
+    )
   }
 
   return (

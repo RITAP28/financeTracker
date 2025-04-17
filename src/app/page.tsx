@@ -1,11 +1,21 @@
 "use client";
 
+import { BudgetComparisonChart } from "@/components/budget/BudgetComparisonChart";
+import CategoryPieChart from "@/components/categories/CategoryPieChart";
+import { CategoryBreakdown } from "@/components/dashboard/CategoryBreakdown";
 import MonthlyExpensesChart from "@/components/dashboard/MonthlyExpensesChart";
 import RecentTransactionsList from "@/components/dashboard/RecentTransactionsList";
 import SummaryCard from "@/components/dashboard/SummaryCard";
 import { Type } from "@/lib/enums";
-import { ITransactionProps } from "@/lib/interface";
+import {
+  BudgetComparison,
+  CategoryExpense,
+  IBudgetProps,
+  ITransactionProps,
+} from "@/lib/interface";
 import { fetchAllTransactions } from "@/lib/queries";
+import { formatMonth } from "@/lib/utils";
+import axios from "axios";
 import { ArrowDown, ArrowUp, DollarSign } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -13,14 +23,26 @@ export default function Home() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [budgetLoading, setBudgetLoading] = useState<boolean>(false);
+  const [budgetError, setBudgetError] = useState<string | null>(null);
+
+  const [budget, setBudget] = useState<IBudgetProps[]>([]);
+
   const [allTransactions, setAllTransactions] = useState<ITransactionProps[]>(
     []
   );
+  const [displayBudgets, setDisplayBudgets] = useState<Record<string, number>>(
+    {}
+  );
+
   const expensesRef = useRef<ITransactionProps[]>([]);
   const incomesRef = useRef<ITransactionProps[]>([]);
 
   const [expenses, setExpenses] = useState<number>(0);
   const [incomes, setIncomes] = useState<number>(0);
+
+  const [data, setData] = useState<BudgetComparison[]>([]);
+  const det: CategoryExpense[] = [];
 
   const handleFetchTransactions = useCallback(async () => {
     try {
@@ -38,9 +60,37 @@ export default function Home() {
     }
   }, []);
 
+  const handleFetchBudget = useCallback(async () => {
+    try {
+      setBudgetLoading(true);
+      setBudgetError(null);
+
+      const budgetResponse = await axios.get(
+        `http://localhost:3000/api/budget/get?month=${formatMonth(new Date())}`
+      );
+      if (budgetResponse.status === 200) {
+        const arr = budgetResponse.data.data as IBudgetProps[];
+        setBudget(budgetResponse.data.data);
+        arr.map((a) => {
+          setDisplayBudgets((prev) => ({
+            ...prev,
+            [a.category.id]: a.budgetAmount,
+          }));
+        });
+        console.log("budget: ", budgetResponse.data.data);
+      }
+    } catch (error) {
+      console.error("Error while fetching budget: ", error);
+      setBudgetError("Failed to fetch the budget");
+    } finally {
+      setBudgetLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     handleFetchTransactions();
-  }, [handleFetchTransactions]);
+    handleFetchBudget();
+  }, [handleFetchTransactions, handleFetchBudget]);
 
   useEffect(() => {
     if (allTransactions && allTransactions.length > 0) {
@@ -60,8 +110,51 @@ export default function Home() {
     }
   }, [allTransactions]);
 
-  // const totalExpenses = expensesRef.current.reduce((acc, curr) => acc + curr.amount, 0);
-  // const totalIncomes = incomesRef.current.reduce((acc, curr) => acc + curr.amount, 0);
+  useEffect(() => {
+    if (allTransactions && displayBudgets) {
+      const updatedData: BudgetComparison[] = budget.map((b) => {
+        const matchingTxn = allTransactions.find(
+          (t) => t.category.id === b.category.id
+        );
+
+        return {
+          categoryId: b.category.id,
+          category: b.category.name,
+          budgeted: b.budgetAmount,
+          actual: matchingTxn?.amount ?? 0,
+          color: matchingTxn?.category.color ?? "#cccccc", // fallback color
+        };
+      });
+
+      setData(updatedData);
+      allTransactions.map((t) => {
+        det.push({
+          categoryId: t.category.id,
+          category: t.category.name,
+          amount: t.amount,
+          color: t.category.color,
+        });
+      });
+    }
+  }, [allTransactions, displayBudgets, budget]);
+
+  if (budgetLoading) {
+    return (
+      <div className="w-full flex justify-center items-center">
+        <p className="">Loading...</p>
+      </div>
+    )
+  }
+
+  if (budgetError) {
+    return (
+      <div className="w-full flex justify-center items-center">
+        <p className="text-red-500 text-sm font-semibold">
+          {budgetError}
+        </p>
+      </div>
+    )
+  }
 
   return (
     <div className="w-full px-8 py-4 min-h-screen">
@@ -101,6 +194,21 @@ export default function Home() {
             loading={loading}
             error={error}
           />
+        </div>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 my-4">
+        <div>
+          <CategoryBreakdown
+            categories={det}
+            totalExpenses={expenses}
+          />
+        </div>
+        <div>
+          <CategoryPieChart allTransactions={allTransactions} />
+        </div>
+        <div>
+          <BudgetComparisonChart data={data} />
         </div>
       </div>
     </div>

@@ -20,6 +20,8 @@ const CategoryPieChart = ({ allTransactions } : {
     allTransactions: ITransactionProps[]
 }) => {
   const data: CategoryExpense[] = [];
+  console.log("all transactions: ", allTransactions);
+  console.log("data: ", data);
   allTransactions.map((t) => {
     data.push({
         categoryId: t.category.id,
@@ -28,12 +30,14 @@ const CategoryPieChart = ({ allTransactions } : {
         color: t.category.color
     });
   });
+
   const formatTooltip = (value: number) => {
     return new Intl.NumberFormat("en-IN", {
       style: "currency",
       currency: "INR",
     }).format(value);
   };
+
   return (
     <Card>
       <CardHeader>
