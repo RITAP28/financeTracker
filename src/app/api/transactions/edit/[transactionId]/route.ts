@@ -5,12 +5,12 @@ import { NextResponse } from "next/server";
 
 export async function PUT(
   req: Request,
-  context: { params: { transactionId: string } }
+  { params }: { params: { transactionId: string } }
 ) {
   try {
     await connectDB();
     const { amount, description, category, type, date } = await req.json();
-    const transactionId = context.params.transactionId;
+    const transactionId = params.transactionId;
 
     const existingCategory = await categories.findOne({ name: category });
     const existingTransaction = await transactions.findById(transactionId);
@@ -29,7 +29,7 @@ export async function PUT(
           category: {
             id: existingCategory._id,
             name: existingCategory.name,
-            color: existingCategory.color
+            color: existingCategory.color,
           },
           type: type,
           date: date,
