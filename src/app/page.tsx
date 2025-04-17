@@ -14,7 +14,7 @@ import {
   ITransactionProps,
 } from "@/lib/interface";
 import { fetchAllTransactions } from "@/lib/queries";
-import { formatMonth } from "@/lib/utils";
+import { formatMonth, publicURL } from "@/lib/utils";
 import axios from "axios";
 import { ArrowDown, ArrowUp, DollarSign } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -66,7 +66,7 @@ export default function Home() {
       setBudgetError(null);
 
       const budgetResponse = await axios.get(
-        `http://localhost:3000/api/budget/get?month=${formatMonth(new Date())}`
+        `${publicURL}/api/budget/get?month=${formatMonth(new Date())}`
       );
       if (budgetResponse.status === 200) {
         const arr = budgetResponse.data.data as IBudgetProps[];

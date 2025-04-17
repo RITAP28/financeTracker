@@ -15,6 +15,7 @@ import { Button } from "../ui/button";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
 import { ITransactionProps } from "@/lib/interface";
+import { publicURL } from "@/lib/utils";
 
 const EditTransaction = ({
   transaction,
@@ -47,7 +48,7 @@ const EditTransaction = ({
     console.log("formdata: ", formData);
     try {
       const editResponse = await axios.put(
-        "http://localhost:3000/api/transactions/edit",
+        `${publicURL}/api/transactions/edit`,
         formData
       );
       if (editResponse.status === 200) {

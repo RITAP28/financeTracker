@@ -17,7 +17,7 @@ import {
   ITransactionProps,
 } from "@/lib/interface";
 import axios from "axios";
-import { formatMonth } from "@/lib/utils";
+import { formatMonth, publicURL } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { BudgetComparisonChart } from "@/components/budget/BudgetComparisonChart";
 
@@ -90,7 +90,7 @@ const Budget = () => {
       setTransationError(null);
 
       const response = await axios.get(
-        `http://localhost:3000/api/transactions/all`,
+        `${publicURL}/api/transactions/all`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -117,7 +117,7 @@ const Budget = () => {
       setCategoriesError(null);
 
       const response = await axios.get(
-        `http://localhost:3000/api/category/all`,
+        `${publicURL}/api/category/all`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -144,7 +144,7 @@ const Budget = () => {
       setBudgetError(null);
 
       const budgetResponse = await axios.get(
-        `http://localhost:3000/api/budget/get?month=${formatMonth(new Date())}`
+        `${publicURL}/api/budget/get?month=${formatMonth(new Date())}`
       );
       if (budgetResponse.status === 200) {
         const arr = budgetResponse.data.data as IBudgetProps[];
@@ -177,7 +177,7 @@ const Budget = () => {
       setSaveBudgetError(null);
 
       const saveResponse = await axios.put(
-        `http://localhost:3000/api/budget/create`,
+        `${publicURL}/api/budget/create`,
         {
           budgets: budget,
         },

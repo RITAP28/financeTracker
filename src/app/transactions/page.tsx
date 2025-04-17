@@ -16,7 +16,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { formatDate } from "@/lib/utils";
+import { formatDate, publicURL } from "@/lib/utils";
 import axios from "axios";
 import { Loader2, SquarePen, Trash } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -71,7 +71,7 @@ export default function Transactions() {
       setFetchError(null);
 
       const response = await axios.get(
-        `http://localhost:3000/api/transactions/all`,
+        `${publicURL}/api/transactions/all`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -105,7 +105,7 @@ export default function Transactions() {
     console.log("Form Data:", formData);
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/transactions/add",
+        `${publicURL}/api/transactions/add`,
         formData,
         {
           headers: {
@@ -137,7 +137,7 @@ export default function Transactions() {
     try {
       console.log("transactionId: ", transactionId);
       const deleteResponse = await axios.delete(
-        `http://localhost:3000/api/transactions/delete/${transactionId}`
+        `${publicURL}/api/transactions/delete/${transactionId}`
       );
 
       if (deleteResponse.status === 200) {
@@ -154,7 +154,7 @@ export default function Transactions() {
       setError(null);
 
       const response = await axios.get(
-        `http://localhost:3000/api/category/all`,
+        `${publicURL}/api/category/all`,
         {
           headers: {
             "Content-Type": "application/json",

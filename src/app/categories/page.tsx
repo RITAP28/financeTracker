@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ICategoryProps, ITransactionProps } from "@/lib/interface";
+import { publicURL } from "@/lib/utils";
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 
@@ -28,7 +29,7 @@ const Categories = () => {
         setError(null);
 
       const response = await axios.get(
-        `http://localhost:3000/api/transactions/all`,
+        `${publicURL}/api/transactions/all`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -55,7 +56,7 @@ const Categories = () => {
         setCategoriesError(null);
 
       const response = await axios.get(
-        `http://localhost:3000/api/category/all`,
+        `${publicURL}/api/category/all`,
         {
           headers: {
             "Content-Type": "application/json",

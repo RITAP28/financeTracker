@@ -1,7 +1,8 @@
 import axios from "axios"
+import { publicURL } from "./utils";
 
 export const fetchAllTransactions = async () => {
-    const response = await axios.get(`http://localhost:3000/api/transactions/all`, {
+    const response = await axios.get(`${publicURL}/api/transactions/all`, {
         headers: {
             "Content-Type": "application/json"
         }
