@@ -33,7 +33,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import EditTransaction from "@/components/forms/editTransaction";
-import { ITransactionProps } from "@/lib/interface";
+import { ICategoryProps, ITransactionProps } from "@/lib/interface";
 import { Status, Type } from "@/lib/enums";
 
 export default function Transactions() {
@@ -50,6 +50,8 @@ export default function Transactions() {
   const [fetchError, setFetchError] = useState<string | null>(null);
 
   const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
+
+  const [allCategories, setAllCategories] = useState<ICategoryProps[]>([]);
 
   const [formData, setFormData] = useState({
     amount: "",
@@ -127,8 +129,6 @@ export default function Transactions() {
     handleFetchTransactions();
   }, [handleFetchTransactions]);
 
-
-
   const closeModal = () => {
     setEditDialogOpen(false);
   };
@@ -147,6 +147,36 @@ export default function Transactions() {
       console.error("Error while deleting a transaction: ", error);
     }
   };
+
+  const handleGetAllCategories = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await axios.get(
+        `http://localhost:3000/api/category/all`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log("all categories fetched successfully");
+        setAllCategories(response.data.data);
+      }
+    } catch (error) {
+      console.error("Error while fetching all categories: ", error);
+      setError("Failed to fetch all categories");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    handleGetAllCategories();
+  }, [handleGetAllCategories]);
 
   return fetchLoading ? (
     <div className="w-full flex justify-center items-center">
@@ -236,11 +266,11 @@ export default function Transactions() {
                       <SelectValue placeholder="Select a category" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Grocery">Grocery</SelectItem>
-                      <SelectItem value="Stationary">Stationary</SelectItem>
-                      <SelectItem value="Rent">Rent</SelectItem>
-                      <SelectItem value="Food">Food</SelectItem>
-                      <SelectItem value="Travel">Travel</SelectItem>
+                      {allCategories.map((c, index) => (
+                        <SelectItem value={c.name} key={index}>
+                          {c.name}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
@@ -289,7 +319,7 @@ export default function Transactions() {
         <Table className="border-[0.5px] border-slate-200 rounded-xl">
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[200px] border-r-[0.5px]">Date</TableHead>
+              <TableHead className="w-[200px] border-r-[0.5px] text-center">Date</TableHead>
               <TableHead className="text-center border-r-[0.5px]">
                 Description
               </TableHead>
@@ -310,14 +340,14 @@ export default function Transactions() {
           <TableBody>
             {allTransactions.map((transaction, index) => (
               <TableRow key={index} className="text-black">
-                <TableCell className="font-medium border-r-[0.5px]">
+                <TableCell className="font-medium border-r-[0.5px] text-center">
                   {formatDate(transaction.date)}
                 </TableCell>
                 <TableCell className="text-center border-r-[0.5px]">
                   {transaction.description}
                 </TableCell>
                 <TableCell className="text-center border-r-[0.5px]">
-                  {transaction.category}
+                  {transaction.category.name}
                 </TableCell>
                 <TableCell className="text-center border-r-[0.5px] font-semibold">
                   {transaction.type === Type.income ? (

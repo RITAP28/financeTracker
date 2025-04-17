@@ -43,7 +43,7 @@ const RecentTransactionsList = ({
             <div className="flex flex-col">
               <p className="text-sm font-semibold">{t.description}</p>
               <p className="flex flex-row items-center text-sm font-light text-slate-500">
-                {formatDate(t.date)} | {t.category}
+                {formatDate(t.date)} | {t.category.name}
               </p>
             </div>
             <div className="">

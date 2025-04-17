@@ -1,3 +1,4 @@
+import categories from "@/models/categories";
 import transactions from "@/models/transactions";
 import { NextResponse } from "next/server";
 
@@ -8,10 +9,12 @@ export async function PUT(
   try {
     const { amount, description, category, type, date } = await req.json();
     const transactionId = context.params.transactionId;
+
+    const existingCategory = await categories.findOne({ name: category });
     const existingTransaction = await transactions.findById(transactionId);
-    if (!existingTransaction)
+    if (!existingTransaction || !existingCategory)
       return NextResponse.json(
-        { success: false, message: "Missing transaction from db" },
+        { success: false, message: "Missing transaction or category from db" },
         { status: 400 }
       );
 
@@ -21,7 +24,7 @@ export async function PUT(
         $set: {
           amount: amount,
           description: description,
-          category: category,
+          category: existingCategory._id,
           type: type,
           date: date,
         },

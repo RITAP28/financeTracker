@@ -2,9 +2,8 @@ import mongoose from 'mongoose';
 
 const CategorySchema = new mongoose.Schema({
     name: String,
-    username: String,
+    color: String,
     createdAt: Date,
-    updatedAt: Date,
 });
 
 export default mongoose.models.Category || mongoose.model('Category', CategorySchema);

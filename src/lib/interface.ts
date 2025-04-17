@@ -6,11 +6,28 @@ export interface ITransactionProps {
   date: string;
   status: Status;
   description: string;
-  category: string;
+  category: {
+    id: string;
+    name: string;
+    color: string
+  };
   type: Type;
 }
 
 export type MonthlyExpense = {
-    month: string;
-    amount: number;
+  month: string;
+  amount: number;
+};
+
+export type CategoryExpense = {
+  categoryId: string;
+  category: string;
+  amount: number;
+  color: string;
+};
+
+export interface ICategoryProps {
+  name: string;
+  color: string;
+  createdAt: Date;
 }
