@@ -105,7 +105,7 @@ const EditTransaction = ({
           Category
         </Label>
         <Select
-          defaultValue={transaction.category}
+          // defaultValue={transaction.category}
           onValueChange={(value) => handleChange("category", value)}
         >
           <SelectTrigger>
