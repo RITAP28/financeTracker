@@ -4,11 +4,11 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   await connectDB();
-  const { amount, description, category, type } = await req.json();
+  const { amount, description, category, type, date } = await req.json();
 
   const newTxn = await transactions.create({
     amount,
-    date: new Date(),
+    date,
     description,
     category,
     status: "Done",

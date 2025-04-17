@@ -1,9 +1,9 @@
 "use client";
 
-import { ActiveButton } from "@/lib/utils";
 import { useState } from "react";
 import Button from "./button";
 import Link from "next/link";
+import { ActiveButton } from "@/lib/enums";
 
 export default function Navbar() {
   const [active, setActive] = useState<ActiveButton>(ActiveButton.dashboard);

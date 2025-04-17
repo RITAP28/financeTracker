@@ -12,9 +12,9 @@ import {
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { DialogFooter } from "../ui/dialog";
 import { Button } from "../ui/button";
-import { ITransactionProps } from "@/lib/utils";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
+import { ITransactionProps } from "@/lib/interface";
 
 const EditTransaction = ({
   transaction,
@@ -66,7 +66,6 @@ const EditTransaction = ({
   return (
     <form onSubmit={handleEditData} className="space-y-4 p-2 w-full mx-auto">
       <div>
-        {transaction.description}
         <Label htmlFor="amount" className="pb-2">
           Amount
         </Label>

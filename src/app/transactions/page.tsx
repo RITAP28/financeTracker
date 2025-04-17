@@ -16,7 +16,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ITransactionProps, Status, Type } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 import axios from "axios";
 import { Loader2, SquarePen, Trash } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -33,6 +33,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import EditTransaction from "@/components/forms/editTransaction";
+import { ITransactionProps } from "@/lib/interface";
+import { Status, Type } from "@/lib/enums";
 
 export default function Transactions() {
   const [allTransactions, setAllTransactions] = useState<ITransactionProps[]>(
@@ -125,14 +127,7 @@ export default function Transactions() {
     handleFetchTransactions();
   }, [handleFetchTransactions]);
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
+
 
   const closeModal = () => {
     setEditDialogOpen(false);
