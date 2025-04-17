@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export const publicURL = process.env.NEXT_PUBLIC_API_BASE_URL;
+export const publicURL = process.env.NEXT_PUBLIC_API_BASE_URL
 
 export const formatDate = (dateString: string) => {
   const date = new Date(dateString);
