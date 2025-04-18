@@ -140,9 +140,7 @@ const Categories = () => {
                   key={index}
                   className="flex items-center gap-3 rounded-md border-0 p-1"
                 >
-                  <div
-                    className={`h-4 w-4 rounded-full bg-${category.color}-400`}
-                  />
+                  <div className={`h-4 w-4 rounded-full`} style={{ backgroundColor: category.color }} />
                   <span className="font-medium">{category.name}</span>
                 </div>
               ))}

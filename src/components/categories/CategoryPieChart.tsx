@@ -16,18 +16,15 @@ import {
 } from "recharts";
 import { CategoryExpense, ITransactionProps } from "@/lib/interface";
 
-const CategoryPieChart = ({ allTransactions } : {
-    allTransactions: ITransactionProps[]
-}) => {
+const CategoryPieChart = ({ allTransactions }: { allTransactions: ITransactionProps[] }) => {
   const data: CategoryExpense[] = [];
-  console.log("all transactions: ", allTransactions);
-  console.log("data: ", data);
-  allTransactions.map((t) => {
+
+  allTransactions.forEach((t) => {
     data.push({
-        categoryId: t.category.id,
-        category: t.category.name,
-        amount: t.amount,
-        color: t.category.color
+      categoryId: t.category.id,
+      category: t.category.name,
+      amount: t.amount,
+      color: t.category.color,
     });
   });
 
@@ -39,26 +36,28 @@ const CategoryPieChart = ({ allTransactions } : {
   };
 
   return (
-    <Card>
+    <Card className="w-full">
       <CardHeader>
-        <CardTitle>Expenses by Category</CardTitle>
-        <CardDescription>
+        <CardTitle className="text-base sm:text-lg md:text-xl">
+          Expenses by Category
+        </CardTitle>
+        <CardDescription className="text-sm sm:text-base">
           How your spending is distributed across categories
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="h-80 w-full">
+        <div className="w-full h-[300px] sm:h-[350px] md:h-[400px]">
           <ResponsiveContainer width="100%" height="100%">
-            <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
+            <PieChart>
               <Pie
                 data={data}
                 cx="50%"
                 cy="50%"
-                labelLine={false}
                 outerRadius={100}
-                fill="#8884d8"
+                // innerRadius={40}
                 dataKey="amount"
                 nameKey="category"
+                labelLine={false}
               >
                 {data.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.color} />
@@ -74,14 +73,13 @@ const CategoryPieChart = ({ allTransactions } : {
                 }}
               />
               <Legend
-                layout="vertical"
-                verticalAlign="middle"
-                align="right"
-                iconSize={10}
-                iconType="circle"
+                layout="horizontal"
+                verticalAlign="bottom"
+                align="center"
+                wrapperStyle={{ fontSize: "12px", paddingTop: "8px" }}
               />
             </PieChart>
-          </ResponsiveContainer>
+          </ResponsiveContainer>  
         </div>
       </CardContent>
     </Card>

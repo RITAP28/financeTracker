@@ -10,9 +10,9 @@ export function BudgetComparisonChart({ data }: BudgetComparisonChartProps) {
     console.log("data: ", data);
   const formatYAxis = (value: number) => {
     if (value >= 1000) {
-      return `$${(value / 1000).toFixed(1)}k`;
+      return `₹${(value / 1000).toFixed(1)}k`;
     }
-    return `$${value}`;
+    return `₹${value}`;
   };
 
   const formatTooltip = (value: number) => {

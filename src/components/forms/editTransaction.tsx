@@ -14,17 +14,19 @@ import { DialogFooter } from "../ui/dialog";
 import { Button } from "../ui/button";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
-import { ITransactionProps } from "@/lib/interface";
+import { ICategoryProps, ITransactionProps } from "@/lib/interface";
 import { publicURL } from "@/lib/utils";
 
 const EditTransaction = ({
   transaction,
   handleFetchTransactions,
-  closeModal
+  closeModal,
+  allCategories,
 }: {
   transaction: ITransactionProps;
   handleFetchTransactions: () => Promise<void>;
-  closeModal: () => void
+  closeModal: () => void;
+  allCategories: ICategoryProps[];
 }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -32,7 +34,7 @@ const EditTransaction = ({
     amount: transaction.amount,
     date: transaction.date,
     description: transaction.description,
-    category: transaction.category,
+    category: transaction.category.name,
     type: transaction.type,
   });
 
@@ -48,8 +50,8 @@ const EditTransaction = ({
     console.log("formdata: ", formData);
     try {
       const editResponse = await axios.put(
-        `${publicURL}/api/transactions/edit`,
-        formData
+        `${publicURL}/api/transactions/edit/${transaction._id}`,
+        formData,
       );
       if (editResponse.status === 200) {
         console.log("successfully edited a transaction");
@@ -106,18 +108,20 @@ const EditTransaction = ({
           Category
         </Label>
         <Select
-          // defaultValue={transaction.category}
+          defaultValue={transaction.category.name}
           onValueChange={(value) => handleChange("category", value)}
+          required
         >
           <SelectTrigger>
-            <SelectValue />
+            <SelectValue placeholder="Select a category" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="Grocery">Grocery</SelectItem>
-            <SelectItem value="Stationary">Stationary</SelectItem>
-            <SelectItem value="Rent">Rent</SelectItem>
-            <SelectItem value="Food">Food</SelectItem>
-            <SelectItem value="Travel">Travel</SelectItem>
+            {allCategories.map((c, index) => (
+              <SelectItem value={c.name} key={index} className="flex flex-row justify-between">
+                <div className="h-4 w-4 rounded-full" style={{ backgroundColor: c.color }} />
+                <div className=""><p className="">{c.name}</p></div>
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
